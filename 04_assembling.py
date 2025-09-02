@@ -3,15 +3,13 @@
 #
 # Actual data preparation involves multiple steps, across multiple tables
 # "pipeline" API is tedious
-#
-# WIP: https://github.com/skrub-data/skrub/pull/1233
 
 # %%
 # Import a more complex dataset, with multiple tables
 import skrub
 from skrub.datasets import fetch_credit_fraud
 
-dataset = fetch_credit_fraud()
+dataset = fetch_credit_fraud(split='train')
 # A first table, linking baskets to fraud
 skrub.TableReport(dataset.baskets)
 # %%
@@ -67,7 +65,7 @@ products
 # %%
 # Now we define our "x" and "y" variables
 baskets = skrub.var('baskets', dataset.baskets)
-basket_IDs = baskets[["ID"]].skb.mark_as_x()
+basket_IDs = baskets[["ID"]].skb.mark_as_X()
 fraud_flags = baskets["fraud_flag"].skb.mark_as_y()
 
 # %%
@@ -100,7 +98,7 @@ y_test = data_test.baskets['fraud_flag']
 basket_test = data_test.baskets.drop('fraud_flag', axis=1)
 
 # We can apply a predictor to this new data
-predictor = predictions.skb.get_pipeline(fitted=True)
+predictor = predictions.skb.make_learner(fitted=True)
 y_pred = predictor.predict({
     'baskets': basket_test,
     'products': data_test.products,
@@ -127,15 +125,15 @@ aggregated_products = vectorized_products.groupby("basket_ID").agg("mean").reset
 
 # We redefine our sources, to have a clean start
 baskets = skrub.var('baskets', dataset.baskets)
-basket_IDs = baskets[["ID"]].skb.mark_as_x()
+basket_IDs = baskets[["ID"]].skb.mark_as_X()
 fraud_flags = baskets["fraud_flag"].skb.mark_as_y()
 features = basket_IDs.merge(aggregated_products, left_on="ID", right_on="basket_ID")
 features = features.drop(columns=["ID", "basket_ID"])
 predictions = features.skb.apply(ExtraTreesClassifier(n_jobs=-1), y=fraud_flags)
 
-search = predictions.skb.get_grid_search(fitted=True, scoring="roc_auc",
+search = predictions.skb.make_grid_search(fitted=True, scoring="roc_auc",
                                          verbose=2)
-search.get_cv_results_table()
+search.results_
 
 # %%
 # skrub gives you all kinds of tools to tune and inspect this pipeline:
