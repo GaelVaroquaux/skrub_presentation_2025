@@ -1,4 +1,4 @@
-# Data operations, cross-validated
+# DataOps
 ####################################
 #
 # Actual data preparation involves multiple steps, across multiple tables
@@ -100,7 +100,7 @@ y_test = data_test.baskets['fraud_flag']
 basket_test = data_test.baskets.drop('fraud_flag', axis=1)
 
 # We can apply a predictor to this new data
-predictor = predictions.skb.get_estimator(fitted=True)
+predictor = predictions.skb.get_pipeline(fitted=True)
 y_pred = predictor.predict({
     'baskets': basket_test,
     'products': data_test.products,

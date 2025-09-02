@@ -12,6 +12,7 @@ y = df['salary']
 df = df.drop('salary', axis=1)
 
 # %%
+###################################################################
 # Split the data into training and testing sets
 from sklearn.model_selection import train_test_split    
 df_train, df_test, y_train, y_test = train_test_split(df, y, test_size=0.2, random_state=42)
@@ -162,6 +163,7 @@ cross_val_score(grid, df, y, scoring='r2')
 
 
 # %%
+###################################################################
 # Let's do it with skrub
 from skrub import TableVectorizer
 tab_model = make_pipeline(TableVectorizer(), RandomForestRegressor())
@@ -172,8 +174,8 @@ tab_model
 cross_val_score(tab_model, df, y, scoring='r2', n_jobs=-1)
 # %%
 # We can actually do something faster
-from skrub import tabular_learner
-tab_model = tabular_learner(RandomForestRegressor())
+from skrub import tabular_pipeline
+tab_model = tabular_pipeline(RandomForestRegressor())
 # What's in that model?
 tab_model
 # %%
