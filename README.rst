@@ -1,6 +1,10 @@
 skrub for tables: Less wrangling, more machine learning
 ========================================================
 
+Video of the presentation: https://www.youtube.com/watch?v=hdWWhwmRpbA
+
+This code currently requires the following PR https://github.com/skrub-data/skrub/pull/1233 soon to be merged in skrub
+
 Presentation at Python Exchange in Feb 2025
 ---------------------------------------------
 
